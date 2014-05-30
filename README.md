@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/active_record_bulk_insert.svg)](http://badge.fury.io/rb/active_record_bulk_insert)
+
 # BULK INSERT
 
 
