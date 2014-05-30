@@ -16,14 +16,14 @@ ActiveRecord::Base.class_eval do
     end
 
     values_sql = attrs.map do |record|
-      _resolve_record(record, use_provided_primary_key).values.map { |r| sanitize(r) }.join(', ')
+      "(#{_resolve_record(record, use_provided_primary_key).values.map { |r| sanitize(r) }.join(', ')})"
     end.join(",")
 
     sql = <<-SQL
       INSERT INTO #{quoted_table_name}
         (#{attributes})
       VALUES
-        (#{values_sql})
+        #{values_sql}
     SQL
     connection.execute(sql) unless attrs.empty?
     invalid
