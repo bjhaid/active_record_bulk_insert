@@ -1,5 +1,5 @@
 require "active_record"
-require "./lib/base"
+require "./lib/active_record_bulk_insert"
 require 'bundler/setup'
 require "benchmark"
 

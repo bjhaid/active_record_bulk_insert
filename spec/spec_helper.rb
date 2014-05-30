@@ -1,5 +1,5 @@
 require "active_record"
-require 'base'
+require 'active_record_bulk_insert'
 require "database_cleaner"
 require "support/sample_record"
 

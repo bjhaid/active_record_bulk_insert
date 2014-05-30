@@ -6,6 +6,15 @@
 
 ### Quick Example
 
+For -v 1.0.0
+
+```ruby
+#Gemfile
+gem "active_record_bulk_insert", :require => 'base'
+```
+
+For subsequent versions
+
 ```ruby
 #Gemfile
 gem "active_record_bulk_insert"
