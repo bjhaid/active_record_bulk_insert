@@ -1,5 +1,5 @@
 require "active_record"
-require "./lib/active_record_bulk_insert"
+require "active_record_bulk_insert"
 require 'bundler/setup'
 require "benchmark"
 
@@ -7,6 +7,7 @@ Bundler.require(:default, :development)
 options = {:adapter => "postgresql", :username => "pair", :password => "pair", :database => "bulk_insert_benchmark", :host => "localhost", port: 5433, :charset => "utf8"}
 ActiveRecord::Base.establish_connection(options)
 ActiveRecord::Migration.verbose = false
+ActiveRecord::Migrator.rollback("benchmark/migrations")
 ActiveRecord::Migrator.migrate("benchmark/migrations")
 
 class SampleRecord < ActiveRecord::Base
@@ -25,4 +26,3 @@ Benchmark.bmbm(25) do |x|
   x.report("Hash with validations") { SampleRecord.bulk_insert(records, {:validate => true}) }
 end
 
-# ActiveRecord::Migrator.rollback("benchmark/migrations")

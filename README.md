@@ -59,6 +59,14 @@ User.bulk_insert(users, :use_provided_primary_key => true)
 ```
 *note this is only available from ActiveRecord 4.0 as id was protected from mass-assignment in ActiveRecord < 4.0*
 
+### Disable default timestamps
+
+*From version 1.0.2 updated_at and created_at are provided by default*
+
+```ruby
+User.bulk_insert(users, :disable_timestamps => true)
+```
+
 ### Bulk insert in batches
 
 ```ruby
