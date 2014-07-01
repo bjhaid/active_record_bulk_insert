@@ -11,14 +11,14 @@ ActiveRecord::Base.class_eval do
     return [] if attrs.empty?
 
     use_provided_primary_key = options.fetch(:use_provided_primary_key, false)
-    attributes = _resolve_record(attrs.first, use_provided_primary_key).keys.join(", ")
+    attributes = _resolve_record(attrs.first, options).keys.join(", ")
 
     if options.fetch(:validate, false)
       attrs, invalid = attrs.partition { |record| _validate(record) }
     end
 
     values_sql = attrs.map do |record|
-      "(#{_resolve_record(record, use_provided_primary_key).values.map { |r| sanitize(r) }.join(', ')})"
+      "(#{_resolve_record(record, options).values.map { |r| sanitize(r) }.join(', ')})"
     end.join(",")
 
     sql = <<-SQL
@@ -27,20 +27,16 @@ ActiveRecord::Base.class_eval do
       VALUES
         #{values_sql}
     SQL
-    connection.execute(sql)
+    connection.execute(sql) unless attrs.empty?
     invalid
   end
 
-  def self._resolve_record(record, use_provided_primary_key)
-    if record.is_a?(Hash) && use_provided_primary_key
-      record.except(primary_key).except(primary_key.to_sym)
-    elsif record.is_a?(Hash)
-      record
-    elsif record.is_a?(ActiveRecord::Base) && use_provided_primary_key
-      record.attributes
-    elsif record.is_a?(ActiveRecord::Base)
-      record.attributes.except(primary_key).except(primary_key.to_sym)
-    end
+  def self._resolve_record(record, options)
+    time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
+    _record = record.is_a?(ActiveRecord::Base) ? record.attributes : record
+    _record.merge!("created_at" => time, "updated_at" => time) unless options.fetch(:disable_timestamps, false)
+    _record = _record.except(primary_key).except(primary_key.to_sym) unless options.fetch(:use_provided_primary_key, false)
+    _record
   end
 
   def self._validate(record)

@@ -79,6 +79,26 @@ describe SampleRecord do
         expect {SampleRecord.bulk_insert([:age => 30], :validate => true)}.to_not change{SampleRecord.count}
       end
     end
+
+    context "timestamps" do
+      it "sets created_at and updated_at by default" do
+        records = 10.times.map { |i| SampleRecord.new(:id => 10000 + i, :age => 4, :name => "Foo#{i}") }
+        SampleRecord.bulk_insert(records)
+
+        SampleRecord.all.each do |record|
+          record.created_at.should_not be_nil
+        end
+      end
+
+      it "does not set created_at and updated_at if :disable_timestamps is true" do
+        records = 10.times.map { |i| SampleRecord.new(:id => 10000 + i, :age => 4, :name => "Foo#{i}") }
+        SampleRecord.bulk_insert(records, :disable_timestamps => true)
+
+        SampleRecord.all.each do |record|
+          record.created_at.should be_nil
+        end
+      end
+    end
   end
 
   describe "bulk_insert_in_batches" do

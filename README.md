@@ -1,5 +1,4 @@
 [![Gem Version](https://badge.fury.io/rb/active_record_bulk_insert.svg)](http://badge.fury.io/rb/active_record_bulk_insert)
-![Build Status](https://api.travis-ci.org/bjhaid/active_record_bulk_insert.png)
 
 # BULK INSERT
 
@@ -58,6 +57,14 @@ users = [{:id => 200, :username => "foo", :firstname => "Foo", :lastname => "Bar
 User.bulk_insert(users, :use_provided_primary_key => true)
 ```
 *note this is only available from ActiveRecord 4.0 as id was protected from mass-assignment in ActiveRecord < 4.0*
+
+### Disable default timestamps
+
+*From version 1.0.2 updated_at and created_at are provided by default*
+
+```ruby
+User.bulk_insert(users, :disable_timestamps => true)
+```
 
 ### Bulk insert in batches
 
