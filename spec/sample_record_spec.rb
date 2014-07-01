@@ -67,6 +67,12 @@ describe SampleRecord do
       SampleRecord.bulk_insert(records)
     end
 
+    it "doesn't blow up on an empty array" do
+      expect do
+        SampleRecord.bulk_insert([])
+      end.to_not raise_error
+    end
+
     context "validations" do
       it "should not persist invalid records if ':validate => true' is specified" do
         SampleRecord.send(:validates, :name, :presence => true)
