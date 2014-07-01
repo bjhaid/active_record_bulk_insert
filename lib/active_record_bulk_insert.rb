@@ -8,6 +8,8 @@ ActiveRecord::Base.class_eval do
   end
 
   def self.bulk_insert(attrs, options = {})
+    return [] if attrs.empty?
+
     use_provided_primary_key = options.fetch(:use_provided_primary_key, false)
     attributes = _resolve_record(attrs.first, use_provided_primary_key).keys.join(", ")
 
@@ -25,7 +27,7 @@ ActiveRecord::Base.class_eval do
       VALUES
         #{values_sql}
     SQL
-    connection.execute(sql) unless attrs.empty?
+    connection.execute(sql)
     invalid
   end
 
