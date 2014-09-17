@@ -35,7 +35,7 @@ User.bulk_insert([user1, user2])
 User.count # => 2
 ```
 
-### Evoke Active Record Validations (after_intialize and validation callbacks)
+### Evoke Active Record Validations (after_initialize and validation callbacks)
 
 ```ruby
 class User < ActiveRecord
