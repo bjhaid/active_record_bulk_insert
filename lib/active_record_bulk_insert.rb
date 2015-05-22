@@ -1,9 +1,11 @@
 ActiveRecord::Base.class_eval do
   def self.bulk_insert_in_batches(attrs, options = {})
     batch_size = options.fetch(:batch_size, 1000)
+    delay      = options.fetch(:delay, nil)
 
     attrs.each_slice(batch_size).map do |sliced_attrs|
       bulk_insert(sliced_attrs, options)
+      sleep(delay) if delay
     end.flatten.compact
   end
 

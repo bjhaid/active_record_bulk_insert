@@ -111,5 +111,13 @@ describe SampleRecord do
 
       SampleRecord.bulk_insert_in_batches(records, :batch_size => 2)
     end
+
+    it "allows you to specify a delay" do
+      records = 10.times.map { |i| SampleRecord.new(:age => 4, :name => "Foo#{i}").attributes }
+
+      SampleRecord.stub!(:sleep)
+      SampleRecord.should_receive(:sleep).with(2)
+      SampleRecord.bulk_insert_in_batches(records, :delay => 2)
+    end
   end
 end

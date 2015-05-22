@@ -72,7 +72,7 @@ User.bulk_insert(users, :disable_timestamps => true)
 users = 1000000.times.map do |i|
   {:username => "foo#{i}", :firstname => "Foo#{i}", :lastname => "Bar#{i}", :age => (30..70).to_a.sample}
 end
-User.bulk_insert_in_batches(users, :batch_size => 10000)
+User.bulk_insert_in_batches(users, :batch_size => 10000, :delay => 1)
 User.count # => 1000000
 ```
 
