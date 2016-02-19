@@ -3,10 +3,12 @@ ActiveRecord::Base.class_eval do
     batch_size = options.fetch(:batch_size, 1000)
     delay      = options.fetch(:delay, nil)
 
-    attrs.each_slice(batch_size).map do |sliced_attrs|
-      bulk_insert(sliced_attrs, options)
+    invalid = []
+    attrs.each_slice(batch_size) do |sliced_attrs|
+      invalid += bulk_insert(sliced_attrs, options)
       sleep(delay) if delay
-    end.flatten.compact
+    end
+    invalid
   end
 
   def self.bulk_insert(attrs, options = {})
@@ -15,6 +17,7 @@ ActiveRecord::Base.class_eval do
     use_provided_primary_key = options.fetch(:use_provided_primary_key, false)
     attributes = _resolve_record(attrs.first, options).keys.join(", ")
 
+    invalid = []
     if options.fetch(:validate, false)
       attrs, invalid = attrs.partition { |record| _validate(record) }
     end
