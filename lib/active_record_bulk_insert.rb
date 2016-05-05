@@ -23,7 +23,7 @@ ActiveRecord::Base.class_eval do
     end
 
     values_sql = attrs.map do |record|
-      "(#{_resolve_record(record, options).map {|k, v| connection.quote v, column_for_attribute(k) }.join(', ')})"
+      "(#{_resolve_record(record, options).map {|k, v| connection.quote(v, try(:column_for_attribute, k)) }.join(', ')})"
     end.join(",")
 
     sql = <<-SQL
