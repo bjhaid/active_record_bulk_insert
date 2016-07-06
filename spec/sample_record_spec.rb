@@ -78,6 +78,13 @@ describe SampleRecord do
         SampleRecord.send(:validates, :name, :presence => true)
         expect {SampleRecord.bulk_insert([:age => 30], :validate => true)}.to_not change{SampleRecord.count}
       end
+
+      it "returns the invalid records" do
+        SampleRecord.send(:validates, :name, :presence => true)
+        records = [{:age => 30, :name => ""}, {:age => 29, :name => "Foo"}]
+        invalid_records = SampleRecord.bulk_insert(records, :validate => true, :disable_timestamps => true)
+        invalid_records.should == [{:age => 30, :name => ""}]
+      end
     end
 
     context "timestamps" do
@@ -118,6 +125,16 @@ describe SampleRecord do
       SampleRecord.stub!(:sleep)
       SampleRecord.should_receive(:sleep).with(2)
       SampleRecord.bulk_insert_in_batches(records, :delay => 2)
+    end
+
+    context "validations" do
+      it "returns the invalid records" do
+        SampleRecord.send(:validates, :name, :presence => true)
+        records = [{:age => 30, :name => ""}, {:age => 29, :name => "Foo"}]
+
+        invalid_records = SampleRecord.bulk_insert_in_batches(records, :batch_size => 1, :validate => true, :disable_timestamps => true)
+        invalid_records.should == [{:age => 30, :name => ""}]
+      end
     end
   end
 end
