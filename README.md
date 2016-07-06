@@ -57,6 +57,7 @@ users = [{:id => 200, :username => "foo", :firstname => "Foo", :lastname => "Bar
 User.bulk_insert(users, :use_provided_primary_key => true)
 ```
 *note this is only available from ActiveRecord 4.0 as id was protected from mass-assignment in ActiveRecord < 4.0*
+*The return value is a list of invalid records*
 
 ### Disable default timestamps
 
