@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_record_bulk_insert (1.0.2)
+    active_record_bulk_insert (1.0.3)
 
 GEM
   remote: https://rubygems.org/
