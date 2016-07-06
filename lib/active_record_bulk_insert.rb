@@ -17,6 +17,7 @@ ActiveRecord::Base.class_eval do
     use_provided_primary_key = options.fetch(:use_provided_primary_key, false)
     attributes = _resolve_record(attrs.first, options).keys.join(", ")
 
+    invalid = []
     if options.fetch(:validate, false)
       attrs, invalid = attrs.partition { |record| _validate(record) }
     end
