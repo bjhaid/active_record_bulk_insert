@@ -1,4 +1,4 @@
-class SampleRecordMigration < ActiveRecord::Migration
+class SampleRecordMigration < ActiveRecord::Migration[4.2]
   def change
     create_table :sample_records do |t|
       t.text "name"
