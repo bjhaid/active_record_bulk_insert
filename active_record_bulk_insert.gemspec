@@ -18,6 +18,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency("activerecord", "4.0.0")
   gem.add_development_dependency("database_cleaner", "1.0.1")
   gem.add_development_dependency("rspec", "2.13.0")
-  gem.add_development_dependency("sqlite3", "1.3.7")
+  gem.add_development_dependency("sqlite3")
   gem.add_development_dependency("pg", "0.17.1") if ENV['benchmark']
 end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_record_bulk_insert (1.0.2)
+    active_record_bulk_insert (1.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -36,7 +36,7 @@ GEM
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.1)
-    sqlite3 (1.3.7)
+    sqlite3 (1.3.12)
     thread_safe (0.3.4)
     tzinfo (0.3.39)
 
@@ -48,4 +48,7 @@ DEPENDENCIES
   activerecord (= 4.0.0)
   database_cleaner (= 1.0.1)
   rspec (= 2.13.0)
-  sqlite3 (= 1.3.7)
+  sqlite3
+
+BUNDLED WITH
+   1.13.6
