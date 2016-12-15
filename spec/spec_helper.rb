@@ -7,6 +7,8 @@ ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":me
 ActiveRecord::Migration.verbose = false
 ActiveRecord::Migrator.migrate("spec/support/migrations")
 
+I18n.config.enforce_available_locales = false
+
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.order = "random"
