@@ -31,27 +31,6 @@ describe SampleRecord do
       SampleRecord.bulk_insert(records)
     end
 
-    it "relies on the DB to provide primary_key if :use_provided_primary_key is false or nil" do
-      records = 10.times.map { |i| SampleRecord.new(:id => 10000 + i, :age => 4, :name => "Foo#{i}") }
-
-      ActiveRecord::ConnectionAdapters::SQLite3Adapter.any_instance.should_receive(:execute).with do |params|
-        records.each do |record|
-          params.should_not include(record.id.to_s)
-        end
-      end
-
-      SampleRecord.bulk_insert(records)
-    end
-
-    it "uses provided primary_key if :use_provided_primary_key is true" do
-      records = 10.times.map { |i| SampleRecord.new(:id => 10000 + i, :age => 4, :name => "Foo#{i}") }
-
-      SampleRecord.bulk_insert(records, :use_provided_primary_key => true)
-      records.each do |record|
-        SampleRecord.exists?(:id => record.id).should be_true
-      end
-    end
-
     it "support insertion of ActiveRecord objects" do
       records = 10.times.map { |i| SampleRecord.new(:age => 4, :name => "Foo#{i}") }
 
@@ -71,6 +50,31 @@ describe SampleRecord do
       expect do
         SampleRecord.bulk_insert([])
       end.to_not raise_error
+    end
+
+    if ActiveRecord::VERSION::MAJOR >= 4
+      context "use_provided_primary_key" do
+        it "relies on the DB to provide primary_key if :use_provided_primary_key is false or nil" do
+          records = 10.times.map { |i| SampleRecord.new(:id => 10000 + i, :age => 4, :name => "Foo#{i}") }
+
+          ActiveRecord::ConnectionAdapters::SQLite3Adapter.any_instance.should_receive(:execute).with do |params|
+            records.each do |record|
+              params.should_not include(record.id.to_s)
+            end
+          end
+
+          SampleRecord.bulk_insert(records)
+        end
+
+        it "uses provided primary_key if :use_provided_primary_key is true" do
+          records = 10.times.map { |i| SampleRecord.new(:id => 10000 + i, :age => 4, :name => "Foo#{i}") }
+
+          SampleRecord.bulk_insert(records, :use_provided_primary_key => true)
+          records.each do |record|
+            SampleRecord.exists?(:id => record.id).should be_true
+          end
+        end
+      end
     end
 
     context "validations" do
