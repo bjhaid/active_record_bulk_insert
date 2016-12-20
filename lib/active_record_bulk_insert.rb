@@ -23,7 +23,10 @@ ActiveRecord::Base.class_eval do
     end
 
     values_sql = attrs.map do |record|
-      "(#{_resolve_record(record, options).map {|k, v| connection.quote(v, try(:column_for_attribute, k)) }.join(', ')})"
+      quoted = _resolve_record(record, options).map {|k, v|
+        _bulk_insert_quote(k, v)
+      }
+      "(#{quoted.join(', ')})"
     end.join(",")
 
     sql = <<-SQL
@@ -34,6 +37,20 @@ ActiveRecord::Base.class_eval do
     SQL
     connection.execute(sql) unless attrs.empty?
     invalid
+  end
+
+  def self._bulk_insert_quote(key, value)
+    case ActiveRecord::VERSION::MAJOR
+    when 5
+      column = try(:column_for_attribute, value)
+      value = connection.type_cast_from_column(column, value) if column
+      connection.quote(value)
+    when 4
+      column = try(:column_for_attribute, key)
+      connection.quote(value, column)
+    else
+      sanitize(value)
+    end
   end
 
   def self._resolve_record(record, options)
