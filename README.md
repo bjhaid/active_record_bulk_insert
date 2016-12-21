@@ -1,4 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/active_record_bulk_insert.svg)](http://badge.fury.io/rb/active_record_bulk_insert)
+[![Gem](https://img.shields.io/gem/dt/active_record_bulk_insert.svg)](https://rubygems.org/gems/active_record_bulk_insert)
 [![Build Status](https://api.travis-ci.org/bjhaid/active_record_bulk_insert.png)](https://travis-ci.org/bjhaid/active_record_bulk_insert)
 
 # BULK INSERT
