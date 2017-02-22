@@ -51,6 +51,17 @@ User.bulk_insert(users, :validate => true)
 ```
 *The return value is a list of invalid records*
 
+### Validate with a custom validator
+
+```ruby
+users = [{:username => "foo", :firstname => "Foo", :lastname => "Bar", :age => 31},
+         {:username => "j.doe", :firstname => "John", :lastname => "Doe", :age => 57},
+         {:firstname => "John", :lastname => "Doe", :age => 57}]
+User.bulk_insert(users, :validate_with => Proc.new { |user| !user[:username].blank? })
+# => [{:firstname => "John", :lastname => "Doe", :age => 57}]
+```
+*The return value is a list of invalid records*
+
 ### Provide your own primary keys
 
 ```ruby

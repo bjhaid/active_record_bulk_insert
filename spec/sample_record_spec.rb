@@ -89,6 +89,25 @@ describe SampleRecord do
         invalid_records = SampleRecord.bulk_insert(records, :validate => true, :disable_timestamps => true)
         invalid_records.should == [{:age => 30, :name => ""}]
       end
+
+      it "validates with a custom validator if ':validate_with' is specified" do
+        records = [{:age => 30, :name => "Bar"}, {:age => 29, :name => "Foo"}]
+        validator = Proc.new { |record| record[:name] != "Foo" }
+
+        invalid_records = SampleRecord.bulk_insert(records, :validate_with => validator)
+
+        invalid_records.should == [{:age => 29, :name => "Foo"}]
+      end
+
+      it "validates with the custom validator when both ':validate' and ':validate_with' are specified" do
+        SampleRecord.send(:validates, :name, :presence => true)
+        records = [{:age => 30, :name => ""}, {:age => 29, :name => "Foo"}]
+        validator = Proc.new { |record| record[:name] != "Foo" }
+
+        invalid_records = SampleRecord.bulk_insert(records, :validate => true, :validate_with => validator)
+
+        invalid_records.should == [{:age => 29, :name => "Foo"}]
+      end
     end
 
     context "timestamps" do
