@@ -18,8 +18,9 @@ ActiveRecord::Base.class_eval do
     attributes = _resolve_record(attrs.first, options).keys.join(", ")
 
     invalid = []
-    if options.fetch(:validate, false)
-      attrs, invalid = attrs.partition { |record| _validate(record) }
+    if options.fetch(:validate, false) || options.fetch(:validate_with, false)
+      _validator = options.fetch(:validate_with, self.method(:_validate))
+      attrs, invalid = attrs.partition { |record| _validator.call(record) }
     end
 
     values_sql = attrs.map do |record|
