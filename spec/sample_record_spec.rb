@@ -16,6 +16,14 @@ describe SampleRecord do
       expect {SampleRecord.bulk_insert(records)}.to change{SampleRecord.count}.by(records.size)
     end
 
+    it "inserts records with different attributes" do
+      records = [
+        { :name => "Foo", :age => 30 },
+        { :name => "Bar" }
+      ]
+      expect {SampleRecord.bulk_insert(records)}.to change{SampleRecord.count}.by(records.size)
+    end
+
     it "inserts multiple records into the DB in a single insert statement" do
       records = 10.times.map { |i| {:age => 4, :name => "Foo#{i}"} }
 

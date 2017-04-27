@@ -14,8 +14,9 @@ ActiveRecord::Base.class_eval do
   def self.bulk_insert(attrs, options = {})
     return [] if attrs.empty?
 
-    use_provided_primary_key = options.fetch(:use_provided_primary_key, false)
-    attributes = _resolve_record(attrs.first, options).keys.join(", ")
+
+    to_import = columns
+    to_import = to_import.reject { |column| column.name == primary_key } unless options.fetch(:use_provided_primary_key, false)
 
     invalid = []
     if options.fetch(:validate, false)
@@ -23,9 +24,11 @@ ActiveRecord::Base.class_eval do
     end
 
     values_sql = attrs.map do |record|
-      quoted = _resolve_record(record, options).map {|k, v|
-        column = try(:column_for_attribute, k)
-        v = connection.type_cast_from_column(column, v) if column
+      attributes = _resolve_record(record, options)
+      quoted = to_import.map { |column|
+        k = column.name
+        v = attributes[k] || attributes[k.to_sym]
+        v = connection.type_cast_from_column(column, v)
         connection.quote(v)
       }
       "(#{quoted.join(', ')})"
@@ -33,7 +36,7 @@ ActiveRecord::Base.class_eval do
 
     sql = <<-SQL
       INSERT INTO #{quoted_table_name}
-        (#{attributes})
+        (#{to_import.map(&:name).join(", ")})
       VALUES
         #{values_sql}
     SQL
@@ -42,10 +45,9 @@ ActiveRecord::Base.class_eval do
   end
 
   def self._resolve_record(record, options)
-    time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
+     time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
     _record = record.is_a?(ActiveRecord::Base) ? record.attributes : record
     _record.merge!("created_at" => time, "updated_at" => time) unless options.fetch(:disable_timestamps, false)
-    _record = _record.except(primary_key).except(primary_key.to_sym) unless options.fetch(:use_provided_primary_key, false)
     _record
   end
 
