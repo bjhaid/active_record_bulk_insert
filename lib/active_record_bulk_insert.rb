@@ -43,7 +43,7 @@ ActiveRecord::Base.class_eval do
   def self._bulk_insert_quote(key, value)
     case ActiveRecord::VERSION::MAJOR
     when 5
-      column = try(:column_for_attribute, value)
+      column = try(:column_for_attribute, key)
       value = connection.type_cast_from_column(column, value) if column
       connection.quote(value)
     when 4
