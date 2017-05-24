@@ -2,13 +2,14 @@ language: ruby
 sudo: required
 dist: precise
 before_install:
-  - sudo apt-get autoremove sqlite3
   - sudo apt-get install python-software-properties
-  - sudo apt-add-repository -y ppa:travis-ci/sqlite3
-  - sudo rm -rf /var/lib/apt/lists/*
-  - sudo apt-get -y update
-  - sudo apt-cache policy sqlite3
-  - sudo apt-get install sqlite3=3.7.15.1-1~travis1
+  - sudo apt-get remove -y --purge libsqlite3-0 sqlite3
+  - wget http://ppa.launchpad.net/travis-ci/sqlite3/ubuntu/pool/main/s/sqlite3/libsqlite3-0_3.7.15.1-1~travis1_amd64.deb
+  - sudo dpkg -i libsqlite3-0_3.7.15.1-1~travis1_amd64.deb
+  - wget http://ppa.launchpad.net/travis-ci/sqlite3/ubuntu/pool/main/s/sqlite3/libsqlite3-dev_3.7.15.1-1~travis1_amd64.deb
+  - sudo dpkg -i libsqlite3-dev_3.7.15.1-1~travis1_amd64.deb
+  - wget http://ppa.launchpad.net/travis-ci/sqlite3/ubuntu/pool/main/s/sqlite3/sqlite3_3.7.15.1-1~travis1_amd64.deb
+  - sudo dpkg -i sqlite3_3.7.15.1-1~travis1_amd64.deb
   - sudo sqlite3 -version
   - gem update bundler
 rvm:
