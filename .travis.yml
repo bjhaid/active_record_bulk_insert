@@ -24,6 +24,7 @@ gemfile:
   - gemfiles/3.2.gemfile
   - gemfiles/4.2.gemfile
   - gemfiles/5.0.gemfile
+  - gemfiles/5.1.gemfile
 matrix:
   exclude:
     - rvm: 1.9.3
