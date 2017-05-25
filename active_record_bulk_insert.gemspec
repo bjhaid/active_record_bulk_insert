@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.files         = Dir.glob('{lib,spec}/**/*.rb') + %w{README.md}
   gem.test_files    = Dir.glob('spec/**/*')
   gem.require_path  = 'lib'
-  gem.version       = "1.3.0"
+  gem.version       = "1.3.1"
 
   gem.add_development_dependency("activerecord", ">=3.2.0")
   gem.add_development_dependency("database_cleaner")
