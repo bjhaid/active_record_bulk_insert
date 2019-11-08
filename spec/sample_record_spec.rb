@@ -52,6 +52,15 @@ describe SampleRecord do
       end.to_not raise_error
     end
 
+    it "handles multiple records with keys in different orders" do
+      SampleRecord.bulk_insert([{:name => "Foo", :age => 30}, {:age => 30, :name => "Foo"}])
+
+      SampleRecord.all.each do |record|
+        expect(record.name).to eq("Foo")
+        expect(record.age).to eq(30)
+      end
+    end
+
     if ActiveRecord::VERSION::MAJOR >= 4
       context "use_provided_primary_key" do
         it "relies on the DB to provide primary_key if :use_provided_primary_key is false or nil" do

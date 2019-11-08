@@ -15,7 +15,7 @@ ActiveRecord::Base.class_eval do
     return [] if attrs.empty?
 
     use_provided_primary_key = options.fetch(:use_provided_primary_key, false)
-    attributes = _resolve_record(attrs.first, options).keys.join(", ")
+    attributes = _resolve_record(attrs.first, options).keys
 
     invalid = []
     if options.fetch(:validate, false) || options.fetch(:validate_with, false)
@@ -24,15 +24,16 @@ ActiveRecord::Base.class_eval do
     end
 
     values_sql = attrs.map do |record|
-      quoted = _resolve_record(record, options).map {|k, v|
-        _bulk_insert_quote(k, v)
+      resolved_record = _resolve_record(record, options)
+      quoted = attributes.map {|k|
+        _bulk_insert_quote(k, resolved_record.fetch(k))
       }
       "(#{quoted.join(', ')})"
     end.join(",")
 
     sql = <<-SQL
       INSERT INTO #{quoted_table_name}
-        (#{attributes})
+        (#{attributes.join(", ")})
       VALUES
         #{values_sql}
     SQL
